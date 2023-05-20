@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger("patient_id");
             $table->string('day');
             $table->string('hour');
+            $table->char('phone');
 
             $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');

@@ -6,35 +6,8 @@ use Illuminate\Http\Request;
 
 trait CustomHelpers{
 
-    public static function uploadImg($request,$img,$path){
 
-    if ($request->hasFile($img)) {
-    $fileName=$request->file($img)->getClientOriginalName();
-     $request->file($img)->move(public_path($path),$fileName);
-     $pathImg = asset($path.$fileName) ;//http://127.0.0.1:8000/assets/images/test.jpg
-     return $pathImg;
-    }else{
-        ApiTraits::errorMessage('img is empty');
-    }
-    }
-
-
-    public static function uploadImgNull(Request $request,$img,$path){
-     if($request->file($img)){
-        $fileName=$request->file($img)->getClientOriginalName();
-        if ($request->hasFile($img)) {
-         $request->file($img)->move(public_path('assets\images'),$fileName);
-         $pathImg = asset($path.$fileName) ;//http://127.0.0.1:8000/assets/images/test.jpg
-
-         return $pathImg;
-        }
-     }else{
-        return "";
-     }
-        }
-
-
-        public static  function generateCode($length = 6) {
+    public static  function generateCode($length = 6) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
     $randomString = '';
@@ -77,18 +50,34 @@ for ($i = 0; $i < 7; $i++) {
 }
 
 
+public static function saveFile($file, $path)
+{
+    $filename =CustomHelpers::generateCode(4).'.'.$file->getClientOriginalName();
+  
+    $filePath = public_path($path . '/' . $filename);
+ 
+    $file->move(public_path($path), $filename);
+    return asset($path . '/' . $filename);
+
+    // if (file_exists($filePath)) {
+    //     return asset($path . '/' . $filename);
+    // } else {
+    //     $file->move(public_path($path), $filename);
+    //     return asset($path . '/' . $filename);
+    // }
+}
 
 
+public static function deleteFile($fileName,$Folder)
+{
 
-
-
-
-
-
-
-
-
-
+    $filePath = basename($fileName);
+    $filePath = $Folder . "\\" . $filePath;
+    $publicPath = public_path($filePath);
+    if (file_exists($publicPath)) {
+        unlink($publicPath);
+    } 
+}
 
 
 }

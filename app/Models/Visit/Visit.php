@@ -21,6 +21,7 @@ class Visit extends Model
         'patient_id',
         'day',
         'hour',
+        'phone' ,
         'created_at',
         'updated_at',
     ];
@@ -55,7 +56,8 @@ class Visit extends Model
                       //all days avilable per week start from tomorrow
                       $avilable_per_week_days=CustomHelpers::avilableWeekDays();
                       //all avilable days for auth doctor
-                      $Doctordays=Doctor::find($doctor_id)->first()->Day;
+                      $Doctordays=Doctor::where('id',$doctor_id)->first()->Day;
+                    //   $Doctordays=Doctor::find($doctor_id)->first()->Day;
                       foreach ($Doctordays as $Doctorday) {
                         $Doctordays[]=$Doctorday['day'] ;
                     }
@@ -91,7 +93,7 @@ class Visit extends Model
     
             // Filter the visits to only include records created today
             $todayVisits = $visits->filter(function ($visit) {
-                return Carbon::parse($visit->created_at)->isToday();
+                return Carbon::parse($visit->day)->isToday();
             });
             
             // Return the filtered results

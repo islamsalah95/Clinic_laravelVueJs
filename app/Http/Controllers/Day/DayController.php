@@ -69,7 +69,7 @@ class DayController extends Controller
      * @param  \App\Models\Day\Day  $day
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateDayRequest $request, Day $day)
+    public function update( )
     {
         //
     }

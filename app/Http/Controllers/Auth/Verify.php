@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Mail\VerifyPass;
 use App\Traits\ApiTraits;
-use App\Models\Admin\Admin;
-use App\Models\Nurse\Nurse;
 use Illuminate\Http\Request;
-use App\Models\Doctor\Doctor;
-use App\Models\Patient\Patient;
+
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Auth\WgichUser;
 
 class Verify extends Controller
 {
        public function Verify(Request $request, $Auth)
     {
         $request->validate([
-            'code' => 'required|digits:6',
-            'password' => 'required',
+            'code' => ['required'],
+            'password' => ['required'],
+
         ]);
+
+
 
         $Authenticatable= WhichUser::WhichUser($Auth);
 

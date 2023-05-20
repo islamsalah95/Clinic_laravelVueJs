@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\NurseResource;
 use App\Http\Requests\StoreDoctorRequest;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\UpdateDoctorRequest;
 use App\Http\Resources\DoctorInfoResource;
 
 class DoctorController extends Controller
@@ -17,7 +16,8 @@ class DoctorController extends Controller
 
     public function store(StoreDoctorRequest $request)
     {
-        $result=Doctor::create($request->all());
+        $password = bcrypt($request->password); 
+        $result=Doctor::create(array_merge($request->all(), ['password' => $password]));
 
         return ApiTraits::myData('store doctor success',$result); 
     }
@@ -60,14 +60,20 @@ class DoctorController extends Controller
     public function showDoctorPatient($doctorId)
     {
         $results = DB::table('doctors')
-        ->select('doctors.id as doctor_id', 'doctors.name as doctor_name', 'doctors.depart', 'patienthistories.patient_id as patient_id', 'patients.name as patient_Name')
+        ->select('doctors.id as doctor_id', 'doctors.name as doctor_name', 'doctors.department_id', 'patienthistories.patient_id as patient_id', 'patients.name as patient_Name')
         ->join('patienthistories', 'doctors.id', '=', 'patienthistories.doctor_id')
         ->join('patients', 'patients.id', '=', 'patienthistories.patient_id')
         ->where('doctors.id', '=', $doctorId) // add the doctor_id filter
-        ->groupBy('doctors.id', 'patienthistories.patient_id','doctors.name','doctors.depart','patients.name')
+        ->groupBy('doctors.id', 'patienthistories.patient_id','doctors.name','doctors.department_id','patients.name')
         ->get();
     return ApiTraits::myData('display all doctor patients',$results); 
     }
+
+
+
+
+
+    
 
    
 }

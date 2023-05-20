@@ -7,10 +7,12 @@ use App\Models\Nurse\Nurse;
 use App\Models\Visit\Visit;
 use App\Models\Service\Service;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Department\Department;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Patienthistory\Patienthistory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Doctor extends Model
@@ -26,7 +28,8 @@ class Doctor extends Model
         'id',
         'name',
         'email',
-        'depart',
+        'code',
+        'department_id',
         'password',
         'created_at',
         'updated_at',
@@ -67,6 +70,11 @@ class Doctor extends Model
     {
         return $this->hasMany(Visit::class, 'doctor_id');
 
+    }
+
+    public function Department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class, 'department_id');
     }
 
 }

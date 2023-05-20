@@ -43,6 +43,12 @@ class ServiceController extends Controller
         return ApiTraits::myData('display Services success',$results); 
     }
 
+    public function showDoctorServices()
+    {
+        $results=$this->AuthUser()->Service;
+
+        return ApiTraits::myData('display Services success',$results); 
+    }
 
 
     public function update(StoreServiceRequest $request,$id)

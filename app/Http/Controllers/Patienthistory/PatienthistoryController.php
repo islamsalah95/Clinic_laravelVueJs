@@ -23,20 +23,19 @@ class PatienthistoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'patient_id' => 'required|exists:patients,id',
             'visit_id' => 'required|exists:visits,id',
             'service_id' => 'required|exists:services,id',
+            'medcine_notice' => 'string|nullable',
     ]);
 
 
            $visitIdExist=Patienthistory::visitIdExist($request);
 
-           if( $visitIdExist==true){
+           if($visitIdExist==true){
            $isPatientHaveThisVisit= Visit::where('id',$request->visit_id)->first();
-            if($isPatientHaveThisVisit->patient_id == $request->patient_id){
                 $result= Patienthistory::create([
                     'doctor_id'=>$this->AuthUser()->id,
-                    'patient_id'=>$request->patient_id,
+                    'patient_id'=>$isPatientHaveThisVisit->patient_id,
                     'visit_id'=>$request->visit_id,
                     'medcine_notice'=>$request->medcine_notice,
                 ]);
@@ -48,9 +47,7 @@ class PatienthistoryController extends Controller
 
                 return ApiTraits::myData('Patienthistory store success', $result);
 
-            }else{
-                return ApiTraits::error('patient not belng this visit', $isPatientHaveThisVisit);
-            }
+
 
             }
 

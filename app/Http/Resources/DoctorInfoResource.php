@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\Nurse\Nurse;
 use App\Models\Service\Service;
+use App\Http\Resources\DepartmentResources;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DoctorInfoResource extends JsonResource
@@ -19,7 +20,7 @@ class DoctorInfoResource extends JsonResource
         return [
             "name"=> $this->name,
             "email"=> $this->email,
-            "depart"=> $this->depart,
+            "department_id"=> DepartmentResources::collection($this->department_id),
             "services"=> ServicesResource::collection($this->Service),
             "nurses"=> NurseResource::collection($this->Nurse),
         ];

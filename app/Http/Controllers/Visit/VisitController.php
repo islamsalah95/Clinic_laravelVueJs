@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Visit;
 
 
 use App\Traits\ApiTraits;
+use Laravel\Sanctum\Guard;
 use App\Models\Visit\Visit;
 use Illuminate\Http\Request;
 use App\Models\Doctor\Doctor;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreVisitRequest;
 use App\Http\Requests\UpdateVisitRequest;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Sanctum\Guard;
+use App\Http\Resources\VisitPatientResource;
 
 class VisitController extends Controller
 {
@@ -25,12 +26,18 @@ class VisitController extends Controller
      * @param  \App\Http\Requests\StoreVisitRequest  $request
      * @return \Illuminate\Http\Response
      */
+    public function DoctorDaysAvilable($id){
+        $days = Visit::DoctorDaysAvilable($id);
+        return ApiTraits::myData('Visit days display success', $days);
+    }
     public function store(Request $request)
     {
         // $userservices=$this->AuthUser()->Service;//all services for auth doctor
          $request->validate([
                 'doctor_id' => 'required|exists:doctors,id',
                 'day' => 'required|exists:days,day',
+                'phone' => 'required|regex:/^01[0125][0-9]{8}$/',
+
         ]);
 
         //all avilable days for auth pass doctor
@@ -67,6 +74,7 @@ class VisitController extends Controller
                             'patient_id' => $this->AuthUser()->id,
                             'day' => $request->day,
                             'hour' => $today->hour + 1,
+                            'phone' => $request->phone,
                         ]);
                         return ApiTraits::myData('Visit store success', $result);
                     }
@@ -78,6 +86,7 @@ class VisitController extends Controller
                         'patient_id' => $this->AuthUser()->id,
                         'day' => $request->day,
                         'hour' => 9,
+                        'phone' => $request->phone,
                     ]);
                     return ApiTraits::myData('Visit store success', $result);
 
@@ -97,19 +106,21 @@ class VisitController extends Controller
      */
     public function showPatientVisits()
     {
-        $result=Visit::
-        whereDate('created_at', '=', substr(date('Y-m-d H:i:s'), 0, 10))
-      ->where('patient_id',$this->AuthUser()->id)
+        $result=Visit::where('patient_id',$this->AuthUser()->id)
       ->get();
-        return ApiTraits::myData('Visit display success', $result);
+        $results=VisitPatientResource::collection($result);
+
+        return ApiTraits::myData('Visit display success', $results);
     }
 
     public function showDoctorVisits()
     {
-        $result=Visit::
-        whereDate('created_at', '=', substr(date('Y-m-d H:i:s'), 0, 10))
-      ->where('doctor_id',$this->AuthUser()->id)
-      ->get();
+        $result=Visit::todayVisit();
+        $result=VisitPatientResource::collection($result);    
+    //     $result=Visit::
+    //     whereDate('created_at', '=', substr(date('Y-m-d H:i:s'), 0, 10))
+    //   ->where('doctor_id',$this->AuthUser()->id)
+    //   ->get();
         return ApiTraits::myData('Visit display success', $result);
         
     }
@@ -118,6 +129,7 @@ class VisitController extends Controller
     public function showVisits()
     {
         $result=Visit::all();
+        $result=VisitPatientResource::collection($result);    
         return ApiTraits::myData('Visit display success', $result);
     
     }

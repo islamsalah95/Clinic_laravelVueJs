@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Auth\Register;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
+use App\Http\Resources\PatientResource;
 
 class PatientController extends Controller
 {
@@ -50,10 +51,15 @@ class PatientController extends Controller
     //  * @param  \App\Models\Patient\Patient  $patient
     //  * @return \Illuminate\Http\Response
     //  */
-    // public function show(Patient $patient)
-    // {
-    //     //
-    // }
+    public function show()
+    {
+        $results=Patient::all();
+
+        $results=PatientResource::collection($results);
+
+        return ApiTraits::myData('Patienthistory store success', $results);
+
+    }
 
     // /**
     //  * Show the form for editing the specified resource.

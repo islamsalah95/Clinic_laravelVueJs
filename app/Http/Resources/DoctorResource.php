@@ -15,9 +15,10 @@ class DoctorResource extends JsonResource
     public function toArray($request)
     {
         return [
+            "id"=> $this->id,
             "name"=> $this->name,
             "email"=> $this->email,
-            "depart"=> $this->depart,
+            "department_id "=> $this->department_id ,
         ];
      }
 }
