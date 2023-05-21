@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Patient\Patient;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -16,3 +18,10 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+
+Broadcast::channel('private-channel.{patient_id}', function ($user,$patient_id) {
+    // Check if the user is authenticated
+    return Auth::check();
+});
+

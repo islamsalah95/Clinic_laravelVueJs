@@ -7,7 +7,7 @@
       <div class="col-12">
         <h3 style="text-align: center">select Patient</h3>
         <form @submit.prevent="myPatientHistories()">
-          
+
           <div class="form-group">
             <label for="patientId">Patients:</label>
             <select class="form-control" id="patientId" v-model.trim="patientId">
@@ -49,6 +49,7 @@
                 <th scope="col">PatientName</th>
                 <th scope="col">services</th>
                 <th scope="col">medcine notice</th>
+                <th scope="col">Sum Services</th>
                 <th scope="col">created_at</th>
               </tr>
             </thead>
@@ -59,10 +60,11 @@
                 <th>
                     <!-- {{ PatientHistorie.services }} -->
                     <ul>
-                        <li v-for="service in PatientHistorie.services" :key="service.id">{{service.service}}</li>
+                        <li v-for="service in PatientHistorie.services" :key="service.id">{{service.service}} : {{service.price}} EGP</li>
                     </ul>
                 </th>
                 <th>{{ PatientHistorie.medcine_notice }}</th>
+                <th>{{ sumPrice(PatientHistorie.services) }}</th>
                 <th>{{  time(PatientHistorie.created_at) }}</th>
               </tr>
 
@@ -74,7 +76,7 @@
         </div>
         <div v-if="PatientHistories.length === 0 ">No History for this Patient</div>
       </div>
-      </div> 
+      </div>
     </div>
   </template>
 
@@ -120,8 +122,16 @@
         .catch((error) => {
           console.log(error);
         });
-      },
-      
-    },
+      }
+      ,sumPrice(services){
+       var counter=0;
+        for (let index = 0; index < services.length; index++) {
+            counter+= services[index].price;            
+        }
+        return counter;
+
+    }
+
+    }
   };
   </script>

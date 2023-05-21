@@ -29,6 +29,7 @@
         <tr v-for="result in results" :key="result.id">
           <td>{{result.id}}</td>
           <td>{{result.service}}</td>
+          <td>{{result.price}}</td>
           <td><button class="btn btn-danger" @click="deleteService(result.id)">Delete</button></td>
         </tr>
         <!-- Add more rows as needed -->
@@ -53,6 +54,22 @@
                             service is required must be text
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="price">price:</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="price"
+                            placeholder="Enter your price"
+                            v-model.trim="price"
+                        />
+                        <div v-if="priceVal" class="alert alert-danger">
+                            price is required must be Number
+                        </div>
+                    </div>
+
+
                     <div class="form-group" style="    text-align: center;">
                     <button type="submit" class="btn btn-primary">
                         Submit
@@ -73,15 +90,22 @@ export default {
         return {
             databaseErrors: null,
             service: "",
+            price: "",
             serviceVal: false,
+            priceVal: false,
+
             results: [],
         };
     },
     methods: {
         store() {
+            console.log(typeof this.price);
             this.serviceVal = typeof this.service !== "string" || this.service === "";
+            this.priceVal = typeof this.price !== "number" || this.price === "";
+
             if (
-                this.serviceVal
+                this.serviceVal ||  this.priceVal
+
             ) {
                 return;
             }
@@ -89,11 +113,12 @@ export default {
             axios
                 .post(`http://127.0.0.1:8000/api/storeService`, {
                     service: this.service,
+                    price: 100,
                 })
                 .then((res) => {
                     console.log(res);
                     if (res.status === 200) {
-                        const updatedData=Notification.addObjectToArray({service: this.service}, this.results) ;
+                        const updatedData=Notification.addObjectToArray(res.data.data, this.results) ;
                         console.log(updatedData);
                         this.results =updatedData;
                          Notification.success("create service Success");
@@ -126,11 +151,11 @@ export default {
         },
      deleteObjectById(id, array) {
         const index = array.findIndex(obj => obj.id === id);
-        
+
         if (index !== -1) {
             array.splice(index, 1);
         }
-        
+
         return array;
         }
     },

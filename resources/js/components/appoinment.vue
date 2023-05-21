@@ -118,7 +118,7 @@ export default {
         displayDoctors(DepartmentId) {
             axios.get(`http://127.0.0.1:8000/api/DepartmentDoctors/${DepartmentId}`)
                 .then((res) => {
-                    console.log(res.data.data);
+                    // console.log(res.data.data);
                     this.doctors = res.data.data;
                 })
                 .catch((error) => { console.log(error); });
@@ -127,7 +127,7 @@ export default {
             console.log(this.doctor_id);
             axios.get(`http://127.0.0.1:8000/api/DoctorDaysAvilable/${this.doctor_id}`)
                 .then((res) => {
-                    console.log(res.data.data);
+                    // console.log(res.data.data);
                     this.days = res.data.data;
                 })
                 .catch((error) => { console.log(error); });
@@ -150,7 +150,7 @@ export default {
                 console.log(res.data.data.token);
                 console.log(res.status);
                 if (res.status === 200) {
-                    console.log(res);
+                    // console.log(res);
                     Notification.success('Appointment fail success');
                     this.$router.replace('/Patients');
 
@@ -158,8 +158,8 @@ export default {
             }).catch((error) => {
                 this.databaseErrors = error.response.data.message;
                 Notification.error(error.response.data.message);
-                console.log(error.response.data.message);
-                console.log(error);
+                // console.log(error.response.data.message);
+                // console.log(error);
 
             });
 
@@ -168,7 +168,7 @@ export default {
     , created() {
         axios.get(`http://127.0.0.1:8000/api/showDepartment`)
             .then((res) => {
-                console.log(res.data.data);
+                // console.log(res.data.data);
                 this.departments = res.data.data;
             })
             .catch((error) => { console.log(error); });

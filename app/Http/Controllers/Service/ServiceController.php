@@ -6,6 +6,7 @@ use App\Traits\ApiTraits;
 use Illuminate\Http\Request;
 use App\Models\Service\Service;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ServicesResource;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\StoreServiceRequest;
 
@@ -16,7 +17,7 @@ class ServiceController extends Controller
     {
         $result=Service::create($request->all());
 
-        return ApiTraits::myData('store Service success',$result); 
+        return ApiTraits::myData('store Service success',$result);
     }
 
 
@@ -25,12 +26,12 @@ class ServiceController extends Controller
         $validator = Validator::make(['id'=>$id], [
             'id' => 'required|exists:services,id',
         ]);
- 
+
         if ($validator->fails()) {
             return ApiTraits::error('this Service id not exist');
         }else{
             $result=Service::where('id',$id)->delete();
-            return ApiTraits::myData('delete Service success',$result); 
+            return ApiTraits::myData('delete Service success',$result);
         }
 
     }
@@ -39,15 +40,17 @@ class ServiceController extends Controller
     public function show()
     {
         $results=Service::all();
+        $results=ServicesResource::collection($results);
 
-        return ApiTraits::myData('display Services success',$results); 
+        return ApiTraits::myData('display Services success',$results);
     }
 
     public function showDoctorServices()
     {
         $results=$this->AuthUser()->Service;
+        $results=ServicesResource::collection($results);
 
-        return ApiTraits::myData('display Services success',$results); 
+        return ApiTraits::myData('display Services success',$results);
     }
 
 
@@ -57,12 +60,12 @@ class ServiceController extends Controller
             'id' => 'required|exists:services,id',
         ]);
 
- 
+
         if ($validator->fails()) {
             return ApiTraits::error('this Service id not exist');
         }else{
             $result=Service::where('id', $id)->update(['service' => $request->service]);
-            return ApiTraits::myData('update Service success',$result);  
+            return ApiTraits::myData('update Service success',$result);
         }
 
     }

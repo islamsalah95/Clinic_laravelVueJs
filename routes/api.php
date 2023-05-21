@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\Logout;
 use App\Http\Controllers\Auth\Verify;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\Register;
+use Illuminate\Support\Facades\Broadcast;
+use App\Models\Doctor\DoctorNotifications;
 use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\Nurse\NurseController;
 use App\Http\Controllers\Visit\VisitController;
@@ -14,6 +16,7 @@ use App\Http\Controllers\Doctor\DoctorController;
 use App\Http\Controllers\Patient\PatientController;
 use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Department\DepartmentController;
+use App\Http\Controllers\Doctor\DoctorNotificationsController;
 use App\Http\Controllers\Patienthistory\PatienthistoryController;
 
 /*
@@ -30,6 +33,9 @@ use App\Http\Controllers\Patienthistory\PatienthistoryController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
+
 
 
 Route::post('/Register', [Register::class, 'create']);
@@ -116,4 +122,14 @@ Route::get('/showPatienthistoryDoctor/{patientId}', [PatienthistoryController::c
 
 
 
+
+
+
+// doctor/admin
+Route::post('/storePatientNotifications', [DoctorNotificationsController::class, 'store']);
+Route::get('/unreadNotifications', [DoctorNotificationsController::class, 'unreadNotifications']);
+Route::get('/readNotifications', [DoctorNotificationsController::class, 'readNotifications']);
+
+Route::get('/markAsRead', [DoctorNotificationsController::class, 'markAsRead']);
+Route::delete('/deleteNotification', [DoctorNotificationsController::class, 'deleteNotification']);
 

@@ -13,13 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('services', function (Blueprint $table) {
+        Schema::create('doctro_notifications', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('service');
-            $table->float('price');
+            $table->unsignedBigInteger("patient_id");
+            $table->string('title');
+            $table->string('desc');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
-                });
+            $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');   
+
+        });
     }
 
     /**
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('services');
+        Schema::dropIfExists('doctro_notifications');
     }
 };
